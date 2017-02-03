@@ -1,0 +1,6 @@
+{
+  "extends": "standard",
+  "rules": {
+    "spaced-comment": 0
+  }
+}

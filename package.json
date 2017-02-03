@@ -1,0 +1,31 @@
+{
+  "name": "check-all-markdown.md",
+  "version": "1.0.0",
+  "description": "Checks all markdown files using markdownlint, and checks for broken links",
+  "main": "index.js",
+  "dependencies": {
+    "chai": "^3.5.0",
+    "eslint": "^3.14.1"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "eslint": "^3.14.1",
+    "eslint-config-standard": "^6.2.1",
+    "eslint-plugin-promise": "^3.4.0",
+    "eslint-plugin-standard": "^2.0.1",
+    "mocha": "^3.2.0"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/create-oss/check-all-markdown.md.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/create-oss/check-all-markdown.md/issues"
+  },
+  "homepage": "https://github.com/create-oss/check-all-markdown.md#readme"
+}
