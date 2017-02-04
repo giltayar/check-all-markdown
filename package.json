@@ -1,5 +1,5 @@
 {
-  "name": "check-all-markdown.md",
+  "name": "check-all-markdown",
   "version": "1.0.0",
   "description": "Checks all markdown files using markdownlint, and checks for broken links",
   "main": "index.js",
@@ -25,12 +25,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/create-oss/check-all-markdown.md.git"
+    "url": "git+https://github.com/create-oss/check-all-markdown.git"
   },
   "author": "",
   "license": "ISC",
+  "keywords": [
+    "markdown",
+    "lint",
+    "create-oss"
+  ],
   "bugs": {
-    "url": "https://github.com/create-oss/check-all-markdown.md/issues"
+    "url": "https://github.com/create-oss/check-all-markdown/issues"
   },
-  "homepage": "https://github.com/create-oss/check-all-markdown.md#readme"
+  "homepage": "https://github.com/create-oss/check-all-markdown#readme"
 }
