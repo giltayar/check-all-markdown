@@ -10,7 +10,7 @@ const fetch = require('node-fetch')
 const flatten = require('lodash.flatten')
 
 exports.listAllFiles = (dir/*:string*/) =>
-  Promise.promisify(glob)(`${dir}/**/*.md`, {ignore: '**/node_modules/**'})
+  Promise.promisify(glob)(`${dir}/**/*.md`, {ignore: `${dir}/**/node_modules/**`})
 
 exports.readMarkdownLintConfiguration = (dir/*:string*/) =>
   Promise.promisify(fs.readFile)(path.join(dir, '.markdownlint.json'), { encoding: 'utf-8' })
