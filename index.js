@@ -13,9 +13,12 @@ exports.listAllFiles = (dir/*:string*/) =>
 
 exports.readMarkdownLintConfiguration = (dir/*:string*/) =>
   Promise.promisify(fs.readFile)(path.join(dir, '.markdownlint.json'), {encoding: 'utf-8'})
+    .then(s => JSON.parse(s))
+    .catch(err => err.code === 'ENOENT' ? null : Promise.reject(err))
 
-exports.checkMarkdownFiles = (dir/*:string*/, files/*:string[]*/, markdownLintConfiguration/*:{}*/) =>
-  Promise.promisify(markdownLint)({files: files, config: markdownLintConfiguration}).toString()
+exports.checkMarkdownFiles = (files/*:string[]*/, markdownLintConfiguration/*:{}*/) =>
+  Promise.promisify(markdownLint)({files: files, config: markdownLintConfiguration})
+    .then(result => result.toString())
 
 exports.retrieveLinks = (markdownText/*:string*/) => {
   const md = markdownIt({ linkify: true })
