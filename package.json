@@ -1,11 +1,10 @@
 {
-  "name": "check-all-markdown",
+  "name": "check-broken-markdown-links",
   "version": "1.0.0",
-  "description": "Checks all markdown files using markdownlint, and checks for broken links",
+  "description": "Checks markdown files for broken links",
   "main": "index.js",
   "dependencies": {
     "bluebird": "^3.4.7",
-    "eslint": "^3.14.1",
     "glob": "^7.1.1",
     "lodash.flatten": "^4.4.0",
     "markdown-it": "^8.2.2",
@@ -24,7 +23,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/create-oss/check-all-markdown.git"
+    "url": "git+https://github.com/create-oss/check-broken-markdown-links.git"
   },
   "author": "",
   "license": "ISC",
@@ -34,7 +33,7 @@
     "create-oss"
   ],
   "bugs": {
-    "url": "https://github.com/create-oss/check-all-markdown/issues"
+    "url": "https://github.com/create-oss/check-broken-markdown-links/issues"
   },
-  "homepage": "https://github.com/create-oss/check-all-markdown#readme"
+  "homepage": "https://github.com/create-oss/check-broken-markdown-links#readme"
 }
