@@ -9,7 +9,7 @@ const markdownIt = require('markdown-it')
 const fetch = require('node-fetch')
 
 exports.listAllFiles = (dir/*:string*/) =>
-  Promise.promisify(glob)(`${dir}/**/*.js`, {ignore: '**/node_modules/**'})
+  Promise.promisify(glob)(`${dir}/**/*.md`, {ignore: '**/node_modules/**'})
 
 exports.readMarkdownLintConfiguration = (dir/*:string*/) =>
   Promise.promisify(fs.readFile)(path.join(dir, '.markdownlint.json'), {encoding: 'utf-8'})
