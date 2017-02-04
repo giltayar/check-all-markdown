@@ -22,6 +22,9 @@
   "scripts": {
     "test": "mocha && eslint '**/*.js'"
   },
+  "bin": {
+    "check-all-markdown": "scripts/check-all-markdown.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/create-oss/check-all-markdown.git"
