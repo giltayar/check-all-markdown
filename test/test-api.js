@@ -38,18 +38,15 @@ describe('api', function () {
   })
 
   describe('checkMarkdownFiles', function () {
-    let files
-
     it('should return the correct results', function () {
       return Promise.resolve()
         .then(() =>
           api.listAllFiles(testFolder)
         )
-        .then(f => {
-          files = f
-          return api.readMarkdownLintConfiguration(testFolder)
+        .then(files => {
+          return Promise.all([files, api.readMarkdownLintConfiguration(testFolder)])
         })
-        .then(config =>
+        .then(([files, config]) =>
           api.checkMarkdownFiles(files, config)
         )
         .then(result => {
@@ -59,6 +56,70 @@ describe('api', function () {
           expect(lines.filter(l => l.includes('bar.md') && l.includes('MD041'))).to.have.length(1)
           expect(lines.filter(l => l.includes('par.md') && l.includes('MD034'))).to.have.length(1)
         })
+    })
+  })
+
+  describe('retrieveLinks', function () {
+    it('should retrieve a regular markdown link', function () {
+      expect(api.retrieveLinks('jjjj\n[foo](http://www.google.com)\nasldjfsldfj'))
+        .to.deep.equal(['http://www.google.com'])
+    })
+
+    it('should retrieve a bare link', function () {
+      expect(api.retrieveLinks('jjjj\nhttp://www.google.com\nasldjfsldfj'))
+        .to.deep.equal(['http://www.google.com'])
+    })
+
+    it('should retrieve a regular markdown link with a path', function () {
+      expect(api.retrieveLinks('jjjj\n[foo](/bar/gar)\nasldjfsldfj'))
+        .to.deep.equal(['/bar/gar'])
+    })
+
+    it('should not retrieve a bare path', function () {
+      expect(api.retrieveLinks('jjjj\n/bar/gar\nasldjfsldfj'))
+        .to.deep.equal([])
+    })
+
+    it('should retrieve more than one link', function () {
+      expect(api.retrieveLinks('jjjj\n[foo](/bar/gar)\nhttp://www.cnet.com/foo'))
+        .to.have.members(['/bar/gar', 'http://www.cnet.com/foo'])
+    })
+
+    it('should retrieve empty array if no links', function () {
+      expect(api.retrieveLinks('jjjj'))
+        .to.have.members([])
+    })
+  })
+
+  describe('checkLink', function () {
+    it('should return true if http url is OK', function () {
+      return api.checkLink('sdfasdf', 'http://www.google.com')
+        .then(res => expect(res).to.equal(true))
+    })
+
+    it('should return true if path that starts with / is OK', function () {
+      return api.checkLink(testFolder, '/bar/tzar/par.md')
+        .then(res => expect(res).to.equal(true))
+    })
+
+    it('should return true if path that does not start with / is OK', function () {
+      return api.checkLink(testFolder, 'bar/tzar/par.md')
+        .then(res => expect(res).to.equal(true))
+    })
+
+    it('should reject if path is not found', function () {
+      return api.checkLink(testFolder, 'bar/not/found.md')
+        .then(res => expect.fail(), err => Promise.resolve(err))
+    })
+
+    it('should reject if URL is 404', function () {
+      return api.checkLink(testFolder, 'http://www.google.com/sdkfjhaskhewih')
+        .then(res => expect.fail(), err => Promise.resolve(err))
+    })
+
+    it('should reject if URL is disconnected', function () {
+      return api.checkLink(testFolder, 'http://192.167.4.3/sdkfjhaskhewih')
+        .then(res => expect.fail(), err => Promise.resolve(err))
     })
   })
 })
