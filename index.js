@@ -4,21 +4,12 @@ const Promise = require('bluebird')
 const glob = require('glob')
 const fs = require('fs')
 const path = require('path')
-const markdownLint = require('markdownlint')
 const markdownIt = require('markdown-it')
 const fetch = require('node-fetch')
+const flatten = require('lodash.flatten')
 
 exports.listAllFiles = (dir/*:string*/) =>
   Promise.promisify(glob)(`${dir}/**/*.md`, {ignore: '**/node_modules/**'})
-
-exports.readMarkdownLintConfiguration = (dir/*:string*/) =>
-  Promise.promisify(fs.readFile)(path.join(dir, '.markdownlint.json'), {encoding: 'utf-8'})
-    .then(s => JSON.parse(s))
-    .catch(err => err.code === 'ENOENT' ? null : Promise.reject(err))
-
-exports.checkMarkdownFiles = (files/*:string[]*/, markdownLintConfiguration/*:{}*/) =>
-  Promise.promisify(markdownLint)({files: files, config: markdownLintConfiguration})
-    .then(result => result.toString())
 
 exports.retrieveLinks = (markdownText/*:string*/) => {
   const md = markdownIt({ linkify: true })
@@ -61,3 +52,20 @@ exports.checkLink = (dir/*:string*/, link/*:string*/) => {
         : err)
   }
 }
+
+exports.checkLinks = (dir/*:string*/, files/*:string[]*/) =>
+  Promise.all(
+    files
+      .map(file =>
+        Promise.promisify(fs.readFile)(file, { encoding: 'utf-8' })
+          .then(fileText => {
+            const links = exports.retrieveLinks(fileText)
+
+            return Promise.all(links.map(link =>
+              exports.checkLink(dir, link)
+                .then(result => null)
+                .catch(err => Promise.resolve(`${file}: ${link} is broken`))))
+          })
+      )
+  )
+  .then(results => flatten(results).filter(s => !!s))

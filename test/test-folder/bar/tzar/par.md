@@ -1,3 +1,3 @@
-# This is a bad file because it has a bare link http://www.google.com
+# Hey
 
-And this is a [broken link](/lskjdflsafj)
+This is a [good link](http://www.google.com)

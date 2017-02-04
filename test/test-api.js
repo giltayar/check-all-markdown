@@ -22,43 +22,6 @@ describe('api', function () {
     })
   })
 
-  describe('readMarkdownLintConfiguration', function () {
-    it('should read a markdown lint configuration', function () {
-      return api.readMarkdownLintConfiguration(testFolder)
-        .then(config => {
-          expect(config.default).to.equal(true)
-          expect(config['single-h1']).to.equal(false)
-        })
-    })
-
-    it('should return null if no configuration found', function () {
-      return api.readMarkdownLintConfiguration(__dirname)
-        .then(config => expect(config).to.equal(null))
-    })
-  })
-
-  describe('checkMarkdownFiles', function () {
-    it('should return the correct results', function () {
-      return Promise.resolve()
-        .then(() =>
-          api.listAllFiles(testFolder)
-        )
-        .then(files => {
-          return Promise.all([files, api.readMarkdownLintConfiguration(testFolder)])
-        })
-        .then(([files, config]) =>
-          api.checkMarkdownFiles(files, config)
-        )
-        .then(result => {
-          const lines = result.split('\n')
-
-          expect(lines).to.have.length(2)
-          expect(lines.filter(l => l.includes('bar.md') && l.includes('MD041'))).to.have.length(1)
-          expect(lines.filter(l => l.includes('par.md') && l.includes('MD034'))).to.have.length(1)
-        })
-    })
-  })
-
   describe('retrieveLinks', function () {
     it('should retrieve a regular markdown link', function () {
       expect(api.retrieveLinks('jjjj\n[foo](http://www.google.com)\nasldjfsldfj'))
@@ -120,6 +83,30 @@ describe('api', function () {
     it('should reject if URL is disconnected', function () {
       return api.checkLink(testFolder, 'http://192.167.4.3/sdkfjhaskhewih')
         .then(res => expect.fail(), err => Promise.resolve(err))
+    })
+  })
+
+  describe('checkLinks', function () {
+    it('should return bad links if there are any', function () {
+      return api.listAllFiles(testFolder)
+        .then(files =>
+          api.checkLinks(testFolder, files))
+        .then(results => {
+          expect(results).to.have.length(2)
+          expect(results.filter(result =>
+            result.includes('/broken-link') && result.includes('bar.md'))).to.have.length(1)
+          expect(results.filter(result =>
+            result.includes('http://localhost:39488') && result.includes('gar.md'))).to.have.length(1)
+        })
+    })
+
+    it('should return an empty array if no broken links', function () {
+      return api.listAllFiles(path.join(testFolder, 'bar/tzar'))
+        .then(files =>
+          api.checkLinks(path.join(testFolder, 'bar/tzar'), files))
+        .then(results => {
+          expect(results).to.have.length(0)
+        })
     })
   })
 })
