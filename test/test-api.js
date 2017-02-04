@@ -6,6 +6,8 @@ const path = require('path')
 const api = require('../index')
 
 describe('api', function () {
+  this.timeout(10000)
+
   const testFolder = path.resolve(__dirname, 'test-folder')
 
   describe('listAllFiles', function () {

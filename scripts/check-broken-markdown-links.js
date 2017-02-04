@@ -2,7 +2,6 @@
 'use strict'
 //@flow
 
-
 const Promise = require('bluebird')
 const api = require('..')
 

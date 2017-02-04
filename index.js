@@ -64,7 +64,7 @@ exports.checkLinks = (dir/*:string*/, files/*:string[]*/) =>
             return Promise.all(links.map(link =>
               exports.checkLink(dir, link)
                 .then(result => null)
-                .catch(err => Promise.resolve(`${file}: ${link} is broken`))))
+                .catch(err => err && Promise.resolve(`${file}: ${link} is broken`))))
           })
       )
   )
