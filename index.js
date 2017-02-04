@@ -8,6 +8,7 @@ const markdownLint = require('markdownlint')
 const markdownIt = require('markdown-it')
 const fetch = require('node-fetch')
 const flatten = require('lodash.flatten')
+const url = require('url')
 
 exports.listAllFiles = (dir/*:string*/) =>
   Promise.promisify(glob)(`${dir}/**/*.md`, {ignore: `${dir}/**/node_modules/**`})
@@ -40,16 +41,20 @@ exports.retrieveLinks = (markdownText/*:string*/) => {
   return ret
 }
 
-exports.checkLink = (dir/*:string*/, link/*:string*/) => {
-  if (link.startsWith('http://') || link.startsWith('https://')) {
-    return fetch(link, {method: 'HEAD'})
+exports.checkLink = (dir/*:string*/, link/*:string*/, {httpMethod = 'HEAD'}/*:{httpMethod: 'HEAD'|'GET'}*/ = {}) => {
+  const linkUrl = url.parse(link)
+
+  if (linkUrl.protocol === 'http:' || linkUrl.protocol === 'https:') {
+    return fetch(link, {method: httpMethod})
       .then(res =>
-        res.ok
+        res.status >= 200 && res.status < 400
           ? Promise.resolve(true)
           : res.status === 404
             ? Promise.reject(new Error(`Broken link ${link}`))
-            : Promise.reject(new Error(`Could not fetch ${link}. status = ${res.status}`)))
-  } else {
+          : res.status === 403 && httpMethod === 'HEAD'
+              ? exports.checkLink(dir, link, {httpMethod: 'GET'})
+          : Promise.reject(new Error(`Could not fetch ${link}. status = ${res.status}`)))
+  } else if (!linkUrl.protocol) {
     return Promise.resolve()
       .then(() => {
         const normalizedPath = link.startsWith('/') ? link.slice(1) : link
@@ -60,6 +65,8 @@ exports.checkLink = (dir/*:string*/, link/*:string*/) => {
       .catch(err => err.code === 'ENOENT'
         ? Promise.reject(new Error(`File ${link} not found in ${dir}`))
         : err)
+  } else {
+    return Promise.resolve(true)
   }
 }
 

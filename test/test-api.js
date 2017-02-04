@@ -92,7 +92,7 @@ describe('api', function () {
     })
   })
 
-  describe('checkLink', function () {
+  describe.only('checkLink', function () {
     it('should return true if http url is OK', function () {
       return api.checkLink('sdfasdf', 'http://www.google.com')
         .then(res => expect(res).to.equal(true))
@@ -114,13 +114,23 @@ describe('api', function () {
     })
 
     it('should reject if URL is 404', function () {
-      return api.checkLink(testFolder, 'http://www.google.com/sdkfjhaskhewih')
+      return api.checkLink(testFolder, 'https://github.com/giltayar/sdfsdf')
         .then(res => expect.fail(), err => Promise.resolve(err))
     })
 
     it('should reject if URL is disconnected', function () {
       return api.checkLink(testFolder, 'http://192.167.4.3/sdkfjhaskhewih')
         .then(res => expect.fail(), err => Promise.resolve(err))
+    })
+
+    it('should be OK even if site does not accept HEAD', function () {
+      return api.checkLink(testFolder, 'http://www.gutenberg.org/files/1112/1112.txt')
+        .then(res => expect(res).to.equal(true))
+    })
+
+    it('should be OK even if url is not an http url', function () {
+      return api.checkLink(testFolder, 'mailto:foo@bar')
+        .then(res => expect(res).to.equal(true))
     })
   })
 
