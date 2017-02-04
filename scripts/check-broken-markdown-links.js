@@ -6,7 +6,6 @@ const Promise = require('bluebird')
 const api = require('..')
 
 const dir = process.argv[2] || '.'
-console.log(dir)
 
 Promise.resolve()
   .then(() =>
