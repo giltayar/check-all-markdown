@@ -24,6 +24,42 @@ describe('api', function () {
     })
   })
 
+  describe('readMarkdownLintConfiguration', function () {
+    it('should read a markdown lint configuration', function () {
+      return api.readMarkdownLintConfiguration(testFolder)
+        .then(config => {
+          expect(config.default).to.equal(true)
+          expect(config['single-h1']).to.equal(false)
+        })
+    })
+
+    it('should return null if no configuration found', function () {
+      return api.readMarkdownLintConfiguration(__dirname)
+        .then(config => expect(config).to.equal(null))
+    })
+  })
+
+  describe('checkMarkdownFiles', function () {
+    it('should return the correct results', function () {
+      return Promise.resolve()
+        .then(() =>
+          api.listAllFiles(testFolder)
+        )
+        .then(files => {
+          return Promise.all([files, api.readMarkdownLintConfiguration(testFolder)])
+        })
+        .then(([files, config]) =>
+          api.checkMarkdownFiles(files, config)
+        )
+        .then(result => {
+          const lines = result.split('\n')
+
+          expect(lines).to.have.length(1)
+          expect(lines.filter(l => l.includes('bar.md') && l.includes('MD034'))).to.have.length(1)
+        })
+    })
+  })
+
   describe('retrieveLinks', function () {
     it('should retrieve a regular markdown link', function () {
       expect(api.retrieveLinks('jjjj\n[foo](http://www.google.com)\nasldjfsldfj'))

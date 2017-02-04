@@ -6,16 +6,17 @@ const {expect} = require('chai')
 const {exec} = require('child_process')
 const path = require('path')
 
-describe('check-markdown-links.js', function () {
+describe('check-all-markdown.js', function () {
   it('should return errors if there are broken links', function (done) {
     exec(`${path.resolve(__dirname,
-      '../scripts/check-broken-markdown-links.js')} "${path.resolve(__dirname, 'test-folder')}"`,
+      '../scripts/check-all-markdown.js')} "${path.resolve(__dirname, 'test-folder')}"`,
       (err, stdout, stderr) => {
         expect(err).to.be.ok
         const lines = stdout.split('\n').filter(s => !!s)
-        expect(lines).to.have.length(2)
-        expect(stdout).to.include('bar.md')
-        expect(stdout).to.include('gar.md')
+        expect(lines).to.have.length(3)
+        expect(lines.filter(l => l.includes('bar.md') && l.includes('MD034'))).to.have.length(1)
+        expect(lines.filter(l => l.includes('bar.md') && l.includes('/broken-link'))).to.have.length(1)
+        expect(lines.filter(l => l.includes('gar.md') && l.includes('http://localhost:39488'))).to.have.length(1)
 
         done()
       })
@@ -23,7 +24,7 @@ describe('check-markdown-links.js', function () {
 
   it('should not return errors if there are no broken links', function (done) {
     exec(`${path.resolve(__dirname,
-      '../scripts/check-broken-markdown-links.js')} "${path.resolve(__dirname, 'test-folder/bar/tzar')}"`,
+      '../scripts/check-all-markdown.js')} "${path.resolve(__dirname, 'test-folder/bar/tzar')}"`,
       (err, stdout, stderr) => {
         expect(err).to.not.be.ok
         const lines = stdout.split('\n').filter(s => !!s)
