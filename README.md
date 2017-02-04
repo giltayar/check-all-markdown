@@ -1,6 +1,6 @@
-# check-all-markdown
+# check-broken-markdown-links
 
-Checks all markdown files using markdownlint, and checks for broken links
+Checks all markdown files for broken links
 
 [![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](http://standardjs.com)
 ![build status](https://travis-ci.org/create-oss/check-broken-markdown-links.svg?branch=master)
@@ -10,7 +10,7 @@ Checks all markdown files using markdownlint, and checks for broken links
 ## Installation
 
 ```sh
-npm install --save-dev check-all-markdown [-g]
+npm install --save-dev check-broken-markdown-links [-g]
 ```
 
 ## Usage
@@ -20,12 +20,11 @@ You can either use the script in your npm scripts, or you can use it as a regula
 ## Script Usage
 
 ```sh
-check-all-markdown [dir]
+check-broken-markdown-links [dir]
 ```
 
-Will check all markdown files (**/*.md) in the _dir_ (default is current directory) for markdown problems
-using [markdownlint](https://github.com/DavidAnson/markdownlint). Additionally, it will go over
-all the http and path links in the markdown files and verify that they are not broken.
+Will check all markdown files (**/*.md) in the _dir_ (default is current directory) for broken links.
+This includes all the http and path links in the markdown files.
 
 The script will ignore any markdown file that is in a node_modules somewhere.
 ## API Usage
