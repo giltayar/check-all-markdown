@@ -92,7 +92,7 @@ describe('api', function () {
     })
   })
 
-  describe.only('checkLink', function () {
+  describe('checkLink', function () {
     it('should return true if http url is OK', function () {
       return api.checkLink('sdfasdf', 'http://www.google.com')
         .then(res => expect(res).to.equal(true))
