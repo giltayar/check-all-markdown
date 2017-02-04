@@ -132,6 +132,11 @@ describe('api', function () {
       return api.checkLink(testFolder, 'mailto:foo@bar')
         .then(res => expect(res).to.equal(true))
     })
+
+    it('should be OK even if url is a git url', function () {
+      return api.checkLink(testFolder, 'git@github.com:petkaantonov/bluebird.git')
+        .then(res => expect(res).to.equal(true))
+    })
   })
 
   describe('checkLinks', function () {

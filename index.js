@@ -54,7 +54,7 @@ exports.checkLink = (dir/*:string*/, link/*:string*/, {httpMethod = 'HEAD'}/*:{h
           : res.status === 403 && httpMethod === 'HEAD'
               ? exports.checkLink(dir, link, {httpMethod: 'GET'})
           : Promise.reject(new Error(`Could not fetch ${link}. status = ${res.status}`)))
-  } else if (!linkUrl.protocol) {
+  } else if (!linkUrl.protocol && !/^[a-z.-]+@[a-z.-]+:/.test(link)) {
     return Promise.resolve()
       .then(() => {
         const normalizedPath = link.startsWith('/') ? link.slice(1) : link
