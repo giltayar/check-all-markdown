@@ -6,7 +6,7 @@ const fs = require('fs')
 const path = require('path')
 const markdownLint = require('markdownlint')
 const markdownIt = require('markdown-it')
-const fetch = require('node-fetch')
+const needle = require('needle')
 const flatten = require('lodash.flatten')
 const url = require('url')
 
@@ -45,15 +45,15 @@ exports.checkLink = (dir/*:string*/, link/*:string*/, {httpMethod = 'HEAD'}/*:{h
   const linkUrl = url.parse(link)
 
   if (linkUrl.protocol === 'http:' || linkUrl.protocol === 'https:') {
-    return fetch(link, {method: httpMethod})
+    return Promise.promisify(needle[httpMethod.toLowerCase()])(link)
       .then(res =>
-        res.status >= 200 && res.status < 400
+        res.statusCode >= 200 && res.statusCode < 400
           ? Promise.resolve(true)
-          : res.status === 404
-            ? Promise.reject(new Error(`Broken link ${link}`))
-          : res.status === 403 && httpMethod === 'HEAD'
-              ? exports.checkLink(dir, link, {httpMethod: 'GET'})
-          : Promise.reject(new Error(`Could not fetch ${link}. status = ${res.status}, method = ${httpMethod}`)))
+          : res.statusCode === 404
+          ? Promise.reject(new Error(`Broken link ${link}`))
+          : res.statusCode === 403 && httpMethod === 'HEAD'
+          ? exports.checkLink(dir, link, {httpMethod: 'GET'})
+          : Promise.reject(new Error(`Could not fetch ${link}. status = ${res.statusCode}, method = ${httpMethod}`)))
   } else if (!linkUrl.protocol && !/^[a-z.-]+@[a-z.-]+:/.test(link)) {
     return Promise.resolve()
       .then(() => {
