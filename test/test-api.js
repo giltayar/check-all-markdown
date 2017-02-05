@@ -124,7 +124,7 @@ describe('api', function () {
     })
 
     it('should be OK even if site does not accept HEAD', function () {
-      return api.checkLink(testFolder, 'http://www.gutenberg.org/files/1112/1112.txt')
+      return api.checkLink(testFolder, 'http://www.gutenberg.net/files/1112/1112.txt')
         .then(res => expect(res).to.equal(true))
     })
 

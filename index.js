@@ -45,7 +45,6 @@ exports.checkLink = (dir/*:string*/, link/*:string*/, {httpMethod = 'HEAD'}/*:{h
   const linkUrl = url.parse(link)
 
   if (linkUrl.protocol === 'http:' || linkUrl.protocol === 'https:') {
-    try {require('child_process').execSync(`curl -v ${link}`)}catch(e){} //eslint-disable
     return Promise.promisify(needle[httpMethod.toLowerCase()])(link)
       .then(res =>
         res.statusCode >= 200 && res.statusCode < 400
