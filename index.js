@@ -53,7 +53,7 @@ exports.checkLink = (dir/*:string*/, link/*:string*/, {httpMethod = 'HEAD'}/*:{h
             ? Promise.reject(new Error(`Broken link ${link}`))
           : res.status === 403 && httpMethod === 'HEAD'
               ? exports.checkLink(dir, link, {httpMethod: 'GET'})
-          : Promise.reject(new Error(`Could not fetch ${link}. status = ${res.status}`)))
+          : Promise.reject(new Error(`Could not fetch ${link}. status = ${res.status}, method = ${httpMethod}`)))
   } else if (!linkUrl.protocol && !/^[a-z.-]+@[a-z.-]+:/.test(link)) {
     return Promise.resolve()
       .then(() => {
