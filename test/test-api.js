@@ -168,8 +168,8 @@ describe('api', function () {
         .then(res => expect(res).to.equal(true))
     })
 
-    it('should be OK for a url with a hash', function () {
-      return api.checkLink(testFolder, '.', 'https://medium.freecodecamp.com/understanding-git-for-real-by-exploring-the-git-directory-1e079c15b807#.g522txqb9')
+    it('should be OK for a url that the needle client had a problem with', function () {
+      return api.checkLink(testFolder, '.', 'https://docs.npmjs.com/getting-started/what-is-npm')
         .then(res => expect(res).to.equal(true))
     })
   })
