@@ -1,6 +1,6 @@
 {
   "name": "check-all-markdown",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "Checks all markdown files using markdownlint, and checks for broken links",
   "main": "index.js",
   "dependencies": {
