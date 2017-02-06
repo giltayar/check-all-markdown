@@ -93,48 +93,83 @@ describe('api', function () {
   })
 
   describe('checkLink', function () {
-    it('should return true if http url is OK', function () {
-      return api.checkLink('sdfasdf', 'http://www.google.com')
+    it('should return true if absolute path is OK', function () {
+      return api.checkLink(testFolder, 'foo.md', '/bar/tzar/par.md')
         .then(res => expect(res).to.equal(true))
     })
 
-    it('should return true if path that starts with / is OK', function () {
-      return api.checkLink(testFolder, '/bar/tzar/par.md')
+    it('should return true if relative path from root is OK', function () {
+      return api.checkLink(testFolder, 'foo.md', 'bar/tzar/par.md')
         .then(res => expect(res).to.equal(true))
     })
 
-    it('should return true if path that does not start with / is OK', function () {
-      return api.checkLink(testFolder, 'bar/tzar/par.md')
+    it('should return true if .. is supported in relative path', function () {
+      return api.checkLink(testFolder, 'bar/zar.md', '../foo.md')
+        .then(res => expect(res).to.equal(true))
+    })
+
+    it('should return true if .. is supported in relative path, with absolute dir ', function () {
+      return api.checkLink(testFolder, path.join(testFolder, 'bar/zar.md'), '../foo.md')
         .then(res => expect(res).to.equal(true))
     })
 
     it('should reject if path is not found', function () {
-      return api.checkLink(testFolder, 'bar/not/found.md')
+      return api.checkLink(testFolder, '.', 'bar/not/found.md')
         .then(res => expect.fail(), err => Promise.resolve(err))
     })
 
+    it('should return true if http url is OK', function () {
+      return api.checkLink(testFolder, '.', 'http://www.google.com')
+        .then(res => expect(res).to.equal(true))
+    })
+
     it('should reject if URL is 404', function () {
-      return api.checkLink(testFolder, 'https://github.com/giltayar/sdfsdf')
+      return api.checkLink(testFolder, '.', 'https://github.com/giltayar/sdfsdf')
         .then(res => expect.fail(), err => Promise.resolve(err))
     })
 
     it('should reject if URL is disconnected', function () {
-      return api.checkLink(testFolder, 'http://192.167.4.3/sdkfjhaskhewih')
+      return api.checkLink(testFolder, '.', 'http://192.167.4.3/sdkfjhaskhewih')
         .then(res => expect.fail(), err => Promise.resolve(err))
     })
 
     it('should be OK even if site does not accept HEAD', function () {
-      return api.checkLink(testFolder, 'http://www.gutenberg.net/files/1112/1112.txt')
+      return api.checkLink(testFolder, '.', 'http://www.gutenberg.net/files/1112/1112.txt')
         .then(res => expect(res).to.equal(true))
     })
 
     it('should be OK even if url is not an http url', function () {
-      return api.checkLink(testFolder, 'mailto:foo@bar')
+      return api.checkLink(testFolder, '.', 'mailto:foo@bar')
         .then(res => expect(res).to.equal(true))
     })
 
     it('should be OK even if url is a git url', function () {
-      return api.checkLink(testFolder, 'git@github.com:petkaantonov/bluebird.git')
+      return api.checkLink(testFolder, '.', 'git@github.com:petkaantonov/bluebird.git')
+        .then(res => expect(res).to.equal(true))
+    })
+
+    it('should be OK for a url that returns 503', function () {
+      return api.checkLink(testFolder, '.', 'http://www.microsoft.com/enable/at/types.aspx')
+        .then(res => expect(res).to.equal(true))
+    })
+
+    it('should be OK for a url that returns 405', function () {
+      return api.checkLink(testFolder, '.', 'https://www.html5rocks.com/en/tutorials/speed/quick/')
+        .then(res => expect(res).to.equal(true))
+    })
+
+    it('should be OK for a url that returns 401', function () {
+      return api.checkLink(testFolder, '.', 'https://developer.microsoft.com/en-us/microsoft-edge/ie6countdown/')
+        .then(res => expect(res).to.equal(true))
+    })
+
+    it('should be OK for a url with a hash', function () {
+      return api.checkLink(testFolder, '.', 'https://www.html5rocks.com/en/tutorials/speed/quick/#hello')
+        .then(res => expect(res).to.equal(true))
+    })
+
+    it('should be OK for a url with a hash', function () {
+      return api.checkLink(testFolder, '.', 'https://medium.freecodecamp.com/understanding-git-for-real-by-exploring-the-git-directory-1e079c15b807#.g522txqb9')
         .then(res => expect(res).to.equal(true))
     })
   })

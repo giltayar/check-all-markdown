@@ -41,7 +41,11 @@ exports.retrieveLinks = (markdownText/*:string*/) => {
   return ret
 }
 
-exports.checkLink = (dir/*:string*/, link/*:string*/, {httpMethod = 'HEAD'}/*:{httpMethod: 'HEAD'|'GET'}*/ = {}) => {
+exports.checkLink = (
+    basedir/*:string*/,
+    fileLinkIsIn/*:string*/,
+    link/*:string*/,
+    {httpMethod = 'HEAD'}/*:{httpMethod: 'HEAD'|'GET'}*/ = {}) => {
   const linkUrl = url.parse(link)
 
   if (linkUrl.protocol === 'http:' || linkUrl.protocol === 'https:') {
@@ -51,19 +55,21 @@ exports.checkLink = (dir/*:string*/, link/*:string*/, {httpMethod = 'HEAD'}/*:{h
           ? Promise.resolve(true)
           : res.statusCode === 404
           ? Promise.reject(new Error(`Broken link ${link}`))
-          : res.statusCode === 403 && httpMethod === 'HEAD'
-          ? exports.checkLink(dir, link, {httpMethod: 'GET'})
+          : httpMethod === 'HEAD'
+          ? exports.checkLink(basedir, fileLinkIsIn, link, {httpMethod: 'GET'})
           : Promise.reject(new Error(`Could not fetch ${link}. status = ${res.statusCode}, method = ${httpMethod}`)))
   } else if (!linkUrl.protocol && !/^[a-z.-]+@[a-z.-]+:/.test(link)) {
     return Promise.resolve()
       .then(() => {
-        const normalizedPath = link.startsWith('/') ? link.slice(1) : link
+        const normalizedPath = link.startsWith('/')
+          ? path.resolve(basedir, link.slice(1))
+          : path.resolve(basedir, path.dirname(fileLinkIsIn), link)
 
-        return Promise.promisify(fs.stat)(path.join(dir, normalizedPath))
+        return Promise.promisify(fs.stat)(normalizedPath)
       })
       .then(() => true)
       .catch(err => err.code === 'ENOENT'
-        ? Promise.reject(new Error(`File ${link} not found in ${dir}`))
+        ? Promise.reject(new Error(`File ${link} not found in ${fileLinkIsIn}`))
         : err)
   } else {
     return Promise.resolve(true)
@@ -79,7 +85,7 @@ exports.checkLinks = (dir/*:string*/, files/*:string[]*/) =>
             const links = exports.retrieveLinks(fileText)
 
             return Promise.all(links.map(link =>
-              exports.checkLink(dir, link)
+              exports.checkLink(dir, file, link)
                 .then(result => null)
                 .catch(err => err && Promise.resolve(`${file}: ${link} is broken`))))
           })
