@@ -177,6 +177,11 @@ describe('api', function () {
       return api.checkLink(testFolder, '.', 'https://docs.npmjs.com/getting-started/what-is-npm')
         .then(res => expect(res).to.equal(true))
     })
+
+    it('should be OK for a url of a site that needs a user-agent header', function () {
+      return api.checkLink(testFolder, '.', 'http://htmldog.com/guides/css/advanced/gradients/')
+        .then(res => expect(res).to.equal(true))
+    })
   })
 
   describe('checkLinks', function () {

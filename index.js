@@ -49,7 +49,7 @@ exports.checkLink = (
   const linkUrl = url.parse(link)
 
   if (linkUrl.protocol === 'http:' || linkUrl.protocol === 'https:') {
-    return fetch(link, {method: httpMethod})
+    return fetch(link, {method: httpMethod, headers: {'User-Agent': 'check-all-markdown'}})
       .then(res =>
         res.status >= 200 && res.status < 400
           ? Promise.resolve(true)
