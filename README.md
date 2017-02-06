@@ -3,8 +3,8 @@
 Checks all markdown files using markdownlint, and checks for broken links
 
 [![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](http://standardjs.com)
-![build status](https://travis-ci.org/create-oss/check-broken-markdown-links.svg?branch=master)
-[![npm version](https://badge.fury.io/js/renumber-files.svg)](https://badge.fury.io/js/renumber-files)
+![build status](https://travis-ci.org/create-oss/check-all-markdown.svg?branch=master)
+[![npm version](https://badge.fury.io/js/check-all-markdown.svg)](https://badge.fury.io/js/check-all-markdown)
 
 
 ## Installation
