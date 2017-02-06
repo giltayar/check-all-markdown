@@ -9,6 +9,7 @@ const markdownIt = require('markdown-it')
 const fetch = require('node-fetch')
 const flatten = require('lodash.flatten')
 const url = require('url')
+const promiseRetry = require('promise-retry')
 
 exports.listAllFiles = (dir/*:string*/) =>
   Promise.promisify(glob)(`${dir}/**/*.md`, {ignore: `${dir}/**/node_modules/**`})
@@ -56,7 +57,10 @@ exports.checkLink = (
           : res.status === 404
           ? Promise.reject(new Error(`Broken link ${link}`))
           : httpMethod === 'HEAD'
-          ? exports.checkLink(basedir, fileLinkIsIn, link, {httpMethod: 'GET'})
+          ? promiseRetry(() => exports.checkLink(basedir, fileLinkIsIn, link, {httpMethod: 'GET'}), {
+            retry: 4,
+            minTimeout: 200
+          })
           : Promise.reject(new Error(`Could not fetch ${link}. status = ${res.status}, method = ${httpMethod}`)))
   } else if (!linkUrl.protocol && !/^[a-z.-]+@[a-z.-]+:/.test(link)) {
     return Promise.resolve()
