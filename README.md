@@ -20,7 +20,7 @@ You can either use the script in your npm scripts, or you can use it as a regula
 ## Script Usage
 
 ```sh
-check-all-markdown [dir]
+check-all-markdown [dir] [--no-check-links]
 ```
 
 Will check all markdown files (**/*.md) in the _dir_ (default is current directory) for markdown problems
@@ -28,6 +28,8 @@ using [markdownlint](https://github.com/DavidAnson/markdownlint). Additionally, 
 all the http and path links in the markdown files and verify that they are not broken.
 
 The script will ignore any markdown file that is in a node_modules somewhere.
+
+If `--no-check-links` is present (or `--check-links false`) then links will not be checked.
 
 ## API Usage
 
