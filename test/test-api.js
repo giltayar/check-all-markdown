@@ -158,18 +158,13 @@ describe('api', function () {
         .then(res => expect(res).to.equal(true))
     })
 
-    it('should be OK for a url that returns 405', function () {
-      return api.checkLink(testFolder, '.', 'https://www.html5rocks.com/en/tutorials/speed/quick/')
-        .then(res => expect(res).to.equal(true))
-    })
-
     it('should be OK for a url that returns 401', function () {
       return api.checkLink(testFolder, '.', 'https://developer.microsoft.com/en-us/microsoft-edge/ie6countdown/')
         .then(res => expect(res).to.equal(true))
     })
 
     it('should be OK for a url with a hash', function () {
-      return api.checkLink(testFolder, '.', 'https://www.html5rocks.com/en/tutorials/speed/quick/#hello')
+      return api.checkLink(testFolder, '.', 'https://developer.microsoft.com/en-us/microsoft-edge/ie6countdown/#hello')
         .then(res => expect(res).to.equal(true))
     })
 

@@ -56,7 +56,7 @@ describe('check-all-markdown.js', function () {
     } catch (e) {
       exception = e
     }
-    expect(exception).to.be.truthy
+    expect(exception).to.be.ok
     if (exception) {
       expect(exception.toString()).to.include('Options')
     }
