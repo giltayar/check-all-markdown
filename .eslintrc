@@ -1,6 +1,10 @@
 {
   "extends": "standard",
+  "env": {
+    "mocha": true
+  },
   "rules": {
-    "spaced-comment": 0
+    "spaced-comment": 0,
+    "no-unused-expressions": 0
   }
 }

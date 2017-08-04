@@ -43,10 +43,10 @@ exports.retrieveLinks = (markdownText/*:string*/) => {
 }
 
 exports.checkLink = (
-    basedir/*:string*/,
-    fileLinkIsIn/*:string*/,
-    link/*:string*/,
-    {httpMethod = 'HEAD'}/*:{httpMethod: 'HEAD'|'GET'}*/ = {}) => {
+  basedir/*:string*/,
+  fileLinkIsIn/*:string*/,
+  link/*:string*/,
+  {httpMethod = 'HEAD'}/*:{httpMethod: 'HEAD'|'GET'}*/ = {}) => {
   const linkUrl = url.parse(link)
 
   if (linkUrl.protocol === 'http:' || linkUrl.protocol === 'https:') {
@@ -55,13 +55,13 @@ exports.checkLink = (
         res.status >= 200 && res.status < 400
           ? Promise.resolve(true)
           : res.status === 404
-          ? Promise.reject(new Error(`Broken link ${link}`))
-          : httpMethod === 'HEAD'
-          ? promiseRetry(() => exports.checkLink(basedir, fileLinkIsIn, link, {httpMethod: 'GET'}), {
-            retry: 4,
-            minTimeout: 200
-          })
-          : Promise.reject(new Error(`Could not fetch ${link}. status = ${res.status}, method = ${httpMethod}`)))
+            ? Promise.reject(new Error(`Broken link ${link}`))
+            : httpMethod === 'HEAD'
+              ? promiseRetry(() => exports.checkLink(basedir, fileLinkIsIn, link, {httpMethod: 'GET'}), {
+                retry: 4,
+                minTimeout: 200
+              })
+              : Promise.reject(new Error(`Could not fetch ${link}. status = ${res.status}, method = ${httpMethod}`)))
   } else if (!linkUrl.protocol && !/^[a-z.-]+@[a-z.-]+:/.test(link)) {
     return Promise.resolve()
       .then(() => {
@@ -95,4 +95,4 @@ exports.checkLinks = (dir/*:string*/, files/*:string[]*/) =>
           })
       )
   )
-  .then(results => flatten(results).filter(s => !!s))
+    .then(results => flatten(results).filter(s => !!s))
