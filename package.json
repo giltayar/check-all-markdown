@@ -32,17 +32,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/create-oss/check-all-markdown.git"
+    "url": "git+https://github.com/giltayar/check-all-markdown.git"
   },
   "author": "",
   "license": "ISC",
   "keywords": [
     "markdown",
-    "lint",
-    "create-oss"
+    "lint"
   ],
   "bugs": {
-    "url": "https://github.com/create-oss/check-all-markdown/issues"
+    "url": "https://github.com/giltayar/check-all-markdown/issues"
   },
-  "homepage": "https://github.com/create-oss/check-all-markdown#readme"
+  "homepage": "https://github.com/giltayar/check-all-markdown#readme"
 }
