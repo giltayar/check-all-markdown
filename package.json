@@ -7,7 +7,7 @@
     "bluebird": "^3.4.7",
     "glob": "^7.1.1",
     "lodash.flatten": "^4.4.0",
-    "markdown-it": "^8.2.2",
+    "markdown-it": "^12.3.2",
     "markdownlint": "^0.6.0",
     "node-fetch": "^1.6.3",
     "promise-retry": "^1.1.1",
